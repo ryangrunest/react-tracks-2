@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Root from "./Root";
+import Auth from './components/Auth';
 import * as serviceWorker from "./serviceWorker";
 
 // Setup Apollo to talk to the backend
@@ -13,7 +14,8 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <Root />
+    {/* <Root /> */}
+    <Auth />
   </ApolloProvider>,
   document.getElementById("root")
 );

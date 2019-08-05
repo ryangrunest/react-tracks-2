@@ -1,3 +1,6 @@
+# to start, in terminal run:
+#  pipenv shell
+#  then run python manage.py runserver
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 import os
