@@ -19,15 +19,21 @@ import Gavel from "@material-ui/icons/Gavel";
 import VerifiedUserTwoTone from "@material-ui/icons/VerifiedUserTwoTone";
 import { create } from "jss";
 
-const Register = ({ classes }) => {
+function Transition(props) {
+  return <Slide direction="up" {...props}/>
+}
+
+const Register = ({ classes, setNewUser }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = async (event, createUser) => {
     event.preventDefault();
     const res = await createUser();
     console.log({ res });
+    setOpen(true);
   }
 
   return <div className={classes.root}>
@@ -39,7 +45,13 @@ const Register = ({ classes }) => {
         Register
       </Typography>
 
-      <Mutation mutation={REGISTER_MUTATION} variables={{ username, email, password}}>
+      <Mutation 
+        mutation={REGISTER_MUTATION} 
+        variables={{ username, email, password}}
+        onCompleted={data => {
+          console.log({ data })
+          setOpen(true);
+        }}>
         {(createUser, { loading, error }) => {
           return (
             <form onSubmit={event => handleSubmit(event, createUser)} className={classes.form}>
@@ -60,9 +72,10 @@ const Register = ({ classes }) => {
                 fullWidth
                 variant="contained"
                 color="secondary"
+                disabled={loading || !username.trim() || !password.trim() || !email.trim()}
                 className={classes.submit}
               >
-                Register
+                {loading ? "Registering..." : "Register"}
               </Button>
               <Button
                 color="primary"
@@ -71,11 +84,35 @@ const Register = ({ classes }) => {
               >
                 Previous User? Log in here
               </Button>
+
+              {/* error handling */}
+              {error && <div>Error</div>}
             </form>
           )
         }}
       </Mutation>
     </Paper>
+
+    {/* Success Dialog */}
+    <Dialog disableBackdropClick={true} open={open} TransitionComponent={Transition}>
+        <DialogTitle>
+          <VerifiedUserTwoTone classname={classes.icon} />
+          New Account
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            User{username} successfully created!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setNewUser(false)}
+            color="primary"
+            variant="contained">
+            Login
+          </Button>
+        </DialogActions>
+    </Dialog>
   </div>;
 };
 
