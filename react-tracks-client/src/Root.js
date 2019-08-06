@@ -5,7 +5,7 @@ import { Query } from 'react-apollo';
 import { gql } from 'apollo-boost'
 
 const Root = () => (
-  <Query query={GET_TRACKS_QUERY}>
+  <Query query={ME_QUERY}>
     {({ data, loading, error }) => {
       if (loading) return <div>Loading</div>
       if (error) return <div>Error</div>
@@ -16,7 +16,15 @@ const Root = () => (
 )
 ;
 
-
+const ME_QUERY = gql`
+  {
+    me {
+      id
+      username
+      email
+    }
+  }  
+`
 const GET_TRACKS_QUERY = gql`
   {
     tracks {
