@@ -26,10 +26,17 @@ const CreateTrack = ({ classes }) => {
   const [description, setDescription] = useState("");
   const [file, setFile] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [fileError, setFileError] = useState("");
 
   const handleAudioChange = event => {
     const selectedFile = event.target.files[0];
-    setFile(selectedFile);
+    const fileSizeLimit = 10000000; //10mb
+    if (selectedFile && selectedFile.size > fileSizeLimit) {
+      setFileError(`${selectedFile.name}: File size is too large`);
+    } else {
+      setFile(selectedFile);
+      setFileError("");
+    }
   };
 
   const handleAudioUpload = async () => {
@@ -77,6 +84,9 @@ const CreateTrack = ({ classes }) => {
           console.log({ data });
           setSubmitting(false);
           setOpen(false);
+          setTitle("");
+          setDescription("");
+          setFile("");
         }}
         refetchQueries={() => [{ query: GET_TRACKS_QUERY }]}
       >
@@ -97,6 +107,7 @@ const CreateTrack = ({ classes }) => {
                       placeholder="Add Title"
                       onChange={event => setTitle(event.target.value)}
                       className={classes.textField}
+                      value={title}
                     />
                   </FormControl>
                   <FormControl fullWidth>
@@ -107,9 +118,10 @@ const CreateTrack = ({ classes }) => {
                       placeholder="Add Description"
                       onChange={event => setDescription(event.target.value)}
                       className={classes.textField}
+                      value={description}
                     />
                   </FormControl>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth error={Boolean(fileError)}>
                     <input
                       id="audio"
                       required
@@ -129,6 +141,7 @@ const CreateTrack = ({ classes }) => {
                         <LibraryMusicIcon className={classes.icon} />
                       </Button>
                       {file && file.name}
+                      <FormHelperText>{fileError}</FormHelperText>
                     </label>
                   </FormControl>
                 </DialogContent>
