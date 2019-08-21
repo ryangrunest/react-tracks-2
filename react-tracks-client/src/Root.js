@@ -11,6 +11,8 @@ import Error from "./components/Shared/Error";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
+export const UserContext = React.createContext();
+
 const Root = () => (
   <Query query={ME_QUERY}>
     {({ data, loading, error }) => {
@@ -21,13 +23,13 @@ const Root = () => (
 
       return (
         <Router>
-          <>
+          <UserContext.Provider value={currentUser}>
             <Header currentUser={currentUser} />
             <Switch>
               <Route exact path="/" component={App} />
               <Route path="/profile/:id" component={Profile} />
             </Switch>
-          </>
+          </UserContext.Provider>
         </Router>
       );
     }}
