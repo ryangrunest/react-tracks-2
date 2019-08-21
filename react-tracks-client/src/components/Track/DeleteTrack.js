@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { gql } from "apollo-boost";
 import { Mutation } from "react-apollo";
 import IconButton from "@material-ui/core/IconButton";
