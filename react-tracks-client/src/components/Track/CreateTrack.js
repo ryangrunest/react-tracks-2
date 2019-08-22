@@ -65,6 +65,13 @@ const CreateTrack = ({ classes }) => {
     createTrack({ variables: { title, description, url: uploadedUrl } });
   };
 
+  const handleUpdateCache = (cache, { data: { createTrack } }) => {
+    const data = cache.readQuery({ query: GET_TRACKS_QUERY });
+    const tracks = data.tracks.concat(createTrack.track);
+    // doesn't update server, just apollo / graphql cache
+    cache.writeQuery({ query: GET_TRACKS_QUERY, data: { tracks } });
+  };
+
   return (
     <>
       {/* Create track button */}
@@ -88,7 +95,8 @@ const CreateTrack = ({ classes }) => {
           setDescription("");
           setFile("");
         }}
-        refetchQueries={() => [{ query: GET_TRACKS_QUERY }]}
+        update={handleUpdateCache()}
+        // refetchQueries={() => [{ query: GET_TRACKS_QUERY }]}
       >
         {(createTrack, { loading, error }) => {
           if (error) return <Error error={error} />;
@@ -187,6 +195,13 @@ const CREATE_TRACK_MUTATION = gql`
         title
         description
         url
+      }
+      likes {
+        id
+      }
+      postedBy {
+        id
+        username
       }
     }
   }
