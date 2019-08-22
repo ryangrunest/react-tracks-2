@@ -95,7 +95,7 @@ const CreateTrack = ({ classes }) => {
           setDescription("");
           setFile("");
         }}
-        update={handleUpdateCache()}
+        update={handleUpdateCache}
         // refetchQueries={() => [{ query: GET_TRACKS_QUERY }]}
       >
         {(createTrack, { loading, error }) => {
